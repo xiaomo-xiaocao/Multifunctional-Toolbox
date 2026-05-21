@@ -17,6 +17,8 @@ from app.routers import image, text, code, spider
 from app.routers.spider import page_router, api_router
 from urllib.parse import quote, unquote
 from fastapi.responses import HTMLResponse, StreamingResponse, Response
+from fastapi.responses import FileResponse
+import os
 import qrcode
 from io import BytesIO
 
@@ -47,6 +49,14 @@ async def index(request: Request):
 @app.get("/health")
 async def health():
     return {"status": "ok"}
+
+# Google 验证文件路由（放在根路径）
+@app.get("/google023a0deb08165a7c.html")
+async def google_verify():
+    file_path = os.path.join("app", "static", "google023a0deb08165a7c.html")
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    return Response(status_code=404)
 
 @app.get("/text/json-format")
 async def json_format_page(request: Request):

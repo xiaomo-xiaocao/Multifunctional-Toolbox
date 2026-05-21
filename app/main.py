@@ -192,9 +192,18 @@ async def ip_page(request: Request):
 @app.get("/api/my-ip")
 async def get_my_ip(request: Request):
     client_ip = request.client.host
-    # 调用免费 IP 归属地 API（ip-api.com 不需要 key，限制 45次/分钟）
+    # 检查是否为保留地址段
+    try:
+        import ipaddress
+        ip_obj = ipaddress.ip_address(client_ip)
+        if ip_obj.is_private or ip_obj.is_loopback or ip_obj.is_multicast or ip_obj.is_reserved:
+            return {"ip": client_ip, "error": "此IP为保留地址（内网或运营商NAT），无法查询地理位置"}
+    except:
+        pass
+
     async with httpx.AsyncClient() as client:
         try:
+            # 使用 ip-api.com 查询
             resp = await client.get(f"http://ip-api.com/json/{client_ip}?fields=status,message,country,regionName,city,isp,query")
             data = resp.json()
             if data.get('status') == 'success':
@@ -206,7 +215,19 @@ async def get_my_ip(request: Request):
                     "isp": data['isp']
                 }
             else:
-                return {"ip": client_ip, "error": data.get('message', '无法获取位置')}
+                # 如果 ip-api 返回错误，尝试备用 api
+                fallback_resp = await client.get(f"https://ipapi.co/{client_ip}/json/")
+                fallback_data = fallback_resp.json()
+                if fallback_data.get('error') is None:
+                    return {
+                        "ip": client_ip,
+                        "country": fallback_data.get('country_name', ''),
+                        "region": fallback_data.get('region', ''),
+                        "city": fallback_data.get('city', ''),
+                        "isp": fallback_data.get('org', '')
+                    }
+                else:
+                    return {"ip": client_ip, "error": data.get('message', '无法获取位置')}
         except Exception:
             return {"ip": client_ip, "error": "查询失败"}
 

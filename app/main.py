@@ -17,7 +17,7 @@ from app.routers import image, text, code, spider
 from app.routers.spider import page_router, api_router
 from urllib.parse import quote, unquote
 from fastapi.responses import HTMLResponse
-# from fastapi.responses import XMLResponse
+from fastapi.responses import Response, XMLResponse
 import qrcode
 from io import BytesIO
 from fastapi.responses import StreamingResponse
@@ -74,29 +74,55 @@ async def url_decode(encoded: str = Form(...)):
     except Exception as e:
         return HTMLResponse(content=f"<div class='alert alert-danger'>JSON 解析错误: {e}</div>", media_type="text/html; charset=utf-8")
 
-# @app.get("/sitemap.xml", response_class=XMLResponse)
-# async def sitemap():
-#     # 列出所有工具的 URL
-#     urls = [
-#         "/",
-#         "/text/json-format",
-#         "/image/compress",
-#         "/code/base64",
-#         "/tool/url-codec",
-#     ]
-#     # 可以动态获取更多工具页面（例如从数据库读取）
-#     # 这里简单生成
-#     sitemap_xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
-#     sitemap_xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-#     for url in urls:
-#         sitemap_xml += f"  <url>\n    <loc>https://yourdomain.com{url}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n"
-#     sitemap_xml += '</urlset>'
-#     return XMLResponse(content=sitemap_xml)
-#
-# @app.get("/robots.txt")
-# async def robots():
-#     content = "User-agent: *\nSitemap: https://yourdomain.com/sitemap.xml"
-#     return Response(content=content, media_type="text/plain")
+@app.get("/sitemap.xml", response_class=XMLResponse)
+async def sitemap():
+    urls = [
+        "/",
+        "/text/json-format",
+        "/image/compress",
+        "/code/base64",
+        "/tool/url-codec",
+        "/tool/qrcode",
+        "/tool/timestamp",
+        "/tool/text-stats",
+        "/tool/jwt-decode",
+        "/tool/hash",
+        "/tool/password",
+        "/tool/ip",
+        "/tool/uuid",
+        "/tool/base-convert",
+        "/tool/diff",
+        "/tool/rot13",
+        "/tool/html-entity",
+        "/tool/image-to-base64",
+        "/tool/password-strength",
+        "/tool/json-to-csv",
+        "/tool/yaml-json",
+        "/tool/xml-format",
+        "/tool/url-parser",
+        "/tool/color-converter",
+        "/tool/regex-tester",
+        "/tool/user-agent",
+        "/tool/page-meta",
+        "/tool/robots-txt",
+        "/tool/headers",
+        "/tool/xpath-tester",
+        "/tool/css-tester",
+        "/tool/http-status",
+        "/tool/cookie-tool",
+    ]
+    sitemap_xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    sitemap_xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    for url in urls:
+        full_url = f"https://multifunctional-toolbox.up.railway.app{url}"  # 替换为实际域名
+        sitemap_xml += f"  <url>\n    <loc>{full_url}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n"
+    sitemap_xml += '</urlset>'
+    return XMLResponse(content=sitemap_xml)
+
+@app.get("/robots.txt")
+async def robots():
+    content = "User-agent: *\nSitemap: https://multifunctional-toolbox.up.railway.app.com/sitemap.xml"
+    return Response(content=content, media_type="text/plain")
 
 @app.get("/tool/qrcode", response_class=HTMLResponse)
 async def qrcode_page(request: Request):

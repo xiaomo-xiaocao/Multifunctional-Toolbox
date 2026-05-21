@@ -72,7 +72,7 @@ async def url_decode(encoded: str = Form(...)):
     except Exception as e:
         return HTMLResponse(content=f"<div class='alert alert-danger'>JSON 解析错误: {e}</div>", media_type="text/html; charset=utf-8")
 
-@app.get("/sitemap.xml", response_class=XMLResponse)
+@app.get("/sitemap.xml")
 async def sitemap():
     urls = [
         "/",

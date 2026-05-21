@@ -10,7 +10,11 @@ from fastapi import APIRouter, Request, Form
 from fastapi.responses import HTMLResponse
 from app import templates
 
-router = APIRouter(prefix="/tool", tags=["spider"])
+# router = APIRouter(prefix="/tool", tags=["spider"])
+# 页面路由（带 /tool 前缀）
+page_router = APIRouter(prefix="/tool", tags=["spider"])
+# API 路由（无前缀）
+api_router = APIRouter(tags=["spider-api"])
 
 # ---------- 辅助函数：验证 URL 安全 ----------
 def is_safe_url(url: str) -> bool:
@@ -30,17 +34,17 @@ def is_safe_url(url: str) -> bool:
 
 
 # ================= 1. User-Agent 生成器（纯前端） =================
-@router.get("/user-agent", response_class=HTMLResponse)
+@page_router.get("/user-agent", response_class=HTMLResponse)
 async def user_agent_page(request: Request):
     return templates.TemplateResponse(request, "user_agent.html", {"request": request})
 
 
 # ================= 2. 网页元信息提取器 =================
-@router.get("/page-meta", response_class=HTMLResponse)
+@page_router.get("/page-meta", response_class=HTMLResponse)
 async def page_meta_page(request: Request):
     return templates.TemplateResponse(request, "page_meta.html", {"request": request})
 
-@router.post("/api/fetch-meta")
+@api_router.post("/api/fetch-meta")
 async def fetch_meta(url: str = Form(...)):
     if not url.startswith(('http://', 'https://')):
         url = 'https://' + url
@@ -62,11 +66,11 @@ async def fetch_meta(url: str = Form(...)):
 
 
 # ================= 3. Robots.txt 检测工具 =================
-@router.get("/robots-txt", response_class=HTMLResponse)
+@page_router.get("/robots-txt", response_class=HTMLResponse)
 async def robots_txt_page(request: Request):
     return templates.TemplateResponse(request, "robots_txt.html", {"request": request})
 
-@router.post("/api/robots-txt")
+@api_router.post("/api/robots-txt")
 async def check_robots(url: str = Form(...)):
     if not url.startswith(('http://', 'https://')):
         url = 'https://' + url
@@ -87,11 +91,11 @@ async def check_robots(url: str = Form(...)):
 
 
 # ================= 4. 响应头分析器 =================
-@router.get("/headers", response_class=HTMLResponse)
+@page_router.get("/headers", response_class=HTMLResponse)
 async def headers_page(request: Request):
     return templates.TemplateResponse(request, "headers.html", {"request": request})
 
-@router.post("/api/fetch-headers")
+@api_router.post("/api/fetch-headers")
 async def fetch_headers(url: str = Form(...)):
     if not url.startswith(('http://', 'https://')):
         url = 'https://' + url
@@ -111,11 +115,11 @@ async def fetch_headers(url: str = Form(...)):
 
 
 # ================= 5. XPath 测试器 =================
-@router.get("/xpath-tester", response_class=HTMLResponse)
+@page_router.get("/xpath-tester", response_class=HTMLResponse)
 async def xpath_tester_page(request: Request):
     return templates.TemplateResponse(request, "xpath_tester.html", {"request": request})
 
-@router.post("/api/xpath-test")
+@api_router.post("/api/xpath-test")
 async def xpath_test(html_content: str = Form(...), xpath_expr: str = Form(...)):
     if len(html_content) > 50000:
         return {"error": "HTML 内容过长，请限制在 50000 字符以内"}
@@ -142,11 +146,11 @@ async def xpath_test(html_content: str = Form(...), xpath_expr: str = Form(...))
 
 
 # ================= 6. CSS 选择器测试器 =================
-@router.get("/css-tester", response_class=HTMLResponse)
+@page_router.get("/css-tester", response_class=HTMLResponse)
 async def css_tester_page(request: Request):
     return templates.TemplateResponse(request, "css_tester.html", {"request": request})
 
-@router.post("/api/css-test")
+@api_router.post("/api/css-test")
 async def css_test(html_content: str = Form(...), css_selector: str = Form(...)):
     if len(html_content) > 50000:
         return {"error": "HTML 内容过长"}
@@ -179,22 +183,22 @@ HTTP_STATUSES = {
     500: "Internal Server Error - 服务器内部错误",
 }
 
-@router.get("/http-status", response_class=HTMLResponse)
+@page_router.get("/http-status", response_class=HTMLResponse)
 async def http_status_page(request: Request):
     return templates.TemplateResponse(request, "http_status.html", {"request": request})
 
-@router.post("/api/http-status")
+@api_router.post("/api/http-status")
 async def http_status_query(code: int = Form(...)):
     status_text = HTTP_STATUSES.get(code, "未知状态码")
     return {"code": code, "text": status_text, "known": code in HTTP_STATUSES}
 
 
 # ================= 8. Cookie 工具（只读） =================
-@router.get("/cookie-tool", response_class=HTMLResponse)
+@page_router.get("/cookie-tool", response_class=HTMLResponse)
 async def cookie_tool_page(request: Request):
     return templates.TemplateResponse(request, "cookie_tool.html", {"request": request})
 
-@router.get("/api/show-cookies")
+@page_router.get("/api/show-cookies")
 async def show_cookies(request: Request):
     cookies = dict(request.cookies)
     return {"cookies": cookies}

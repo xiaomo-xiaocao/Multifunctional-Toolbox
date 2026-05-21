@@ -25,12 +25,17 @@ def is_safe_url(url: str) -> bool:
         host = parsed.hostname
         if host is None:
             return False
-        ip = ipaddress.ip_address(host)
-        if ip.is_private or ip.is_loopback or ip.is_multicast:
-            return False
+        # 如果 host 看起来像 IP 地址，则检查是否为内网
+        try:
+            ip = ipaddress.ip_address(host)
+            if ip.is_private or ip.is_loopback or ip.is_multicast:
+                return False
+        except ValueError:
+            # host 是域名，默认允许（不做内网检查）
+            pass
+        return True
     except Exception:
         return False
-    return True
 
 
 # ================= 1. User-Agent 生成器（纯前端） =================

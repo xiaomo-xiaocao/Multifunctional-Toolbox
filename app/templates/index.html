@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+{% block title %}首页 - 多功能工具箱{% endblock %}
+{% block content %}
+<div class="col-12 text-center mb-4">
+    <h1>欢迎使用在线工具箱</h1>
+    <p class="lead">免费、快速、无需注册</p>
+</div>
+
+<!-- 第一行 -->
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">📄 JSON 格式化</h5>
+                <p class="card-text">美化、压缩 JSON 数据，支持错误提示。</p>
+                <a href="/text/json-format" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">🖼️ 图片压缩</h5>
+                <p class="card-text">压缩图片大小，可调节质量与宽度。</p>
+                <a href="/image/compress" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">🔐 Base64 编解码</h5>
+                <p class="card-text">文本与 Base64 互相转换，支持复制结果。</p>
+                <a href="/code/base64" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 第二行 -->
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">🌐 URL 编码/解码</h5>
+                <p class="card-text">对 URL 进行编码与解码，处理特殊字符。</p>
+                <a href="/tool/url-codec" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">📱 二维码生成器</h5>
+                <p class="card-text">文本/网址生成二维码图片，支持复制。</p>
+                <a href="/tool/qrcode" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">⏱️ Unix时间戳</h5>
+                <p class="card-text">时间戳与日期时间双向转换。</p>
+                <a href="/tool/timestamp" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 第三行 -->
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">📊 字符统计</h5>
+                <p class="card-text">统计字符数、汉字数、单词数、行数。</p>
+                <a href="/tool/text-stats" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">🔓 JWT解码器</h5>
+                <p class="card-text">解码JWT Token，查看Header和Payload。</p>
+                <a href="/tool/jwt-decode" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">🔢 哈希计算器</h5>
+                <p class="card-text">MD5, SHA-1, SHA-256 哈希计算。</p>
+                <a href="/tool/hash" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 第四行 -->
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">🔑 密码生成器</h5>
+                <p class="card-text">生成随机密码，可自定义长度和字符集。</p>
+                <a href="/tool/password" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">🌍 IP地址查询</h5>
+                <p class="card-text">显示本机公网IP及地理位置。</p>
+                <a href="/tool/ip" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">🆔 UUID生成器</h5>
+                <p class="card-text">生成随机UUID，可批量生成。</p>
+                <a href="/tool/uuid" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 第五行 -->
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">🔢 进制转换器</h5>
+                <p class="card-text">二进制、八进制、十进制、十六进制互转。</p>
+                <a href="/tool/base-convert" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">📝 文本对比</h5>
+                <p class="card-text">高亮显示两段文本的差异。</p>
+                <a href="/tool/diff" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">🔄 ROT13编解码</h5>
+                <p class="card-text">ROT13简易加密/解密。</p>
+                <a href="/tool/rot13" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 第六行 -->
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">🏷️ HTML实体编解码</h5>
+                <p class="card-text">HTML特殊字符与实体相互转换。</p>
+                <a href="/tool/html-entity" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">🖼️ 图片转Base64</h5>
+                <p class="card-text">将图片转换为Base64字符串。</p>
+                <a href="/tool/image-to-base64" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">🔒 密码强度检测</h5>
+                <p class="card-text">检测密码强度，给出评分建议。</p>
+                <a href="/tool/password-strength" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 第七行：爬虫相关工具 -->
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">🎭 User-Agent生成器</h5>
+                <p class="card-text">随机生成常用浏览器User-Agent。</p>
+                <a href="/tool/user-agent" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">📄 网页元信息提取</h5>
+                <p class="card-text">获取网页标题、描述、关键词。</p>
+                <a href="/tool/page-meta" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">🤖 Robots.txt检测</h5>
+                <p class="card-text">检测目标网站的robots.txt文件。</p>
+                <a href="/tool/robots-txt" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 第八行：第四个爬虫工具 -->
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">📡 HTTP响应头分析</h5>
+                <p class="card-text">查看网页的响应头信息。</p>
+                <a href="/tool/headers" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">🔎 XPath测试器</h5>
+                <p class="card-text">测试XPath表达式在HTML/XML中的匹配。</p>
+                <a href="/tool/xpath-tester" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">🎨 CSS选择器测试</h5>
+                <p class="card-text">测试CSS选择器匹配元素。</p>
+                <a href="/tool/css-tester" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 第九行：新增六个工具（前三个） -->
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">📊 JSON转CSV</h5>
+                <p class="card-text">将JSON数据转换为CSV格式。</p>
+                <a href="/tool/json-to-csv" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">🔄 YAML↔JSON</h5>
+                <p class="card-text">YAML与JSON格式互转。</p>
+                <a href="/tool/yaml-json" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">📝 XML格式化</h5>
+                <p class="card-text">美化、格式化XML代码。</p>
+                <a href="/tool/xml-format" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 第十行：新增六个工具（后三个） -->
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">📡 HTTP状态码查询</h5>
+                <p class="card-text">查询HTTP状态码含义及分类。</p>
+                <a href="/tool/http-status" class="btn btn-primary">立即使用</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card tool-card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">🍪 Cookie解析/生成</h5>
+                    <p class="card-text">解析Cookie字符串或生成Cookie。</p>
+                    <a href="/tool/cookie-tool" class="btn btn-primary">立即使用</a>
+                </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

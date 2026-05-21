@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}HTML实体编解码{% endblock %}
+{% block content %}
+<h2>HTML 实体编解码</h2>
+<div class="row">
+    <div class="col-md-6">
+        <textarea id="inputText" class="form-control" rows="6" placeholder="输入文本或HTML实体..."></textarea>
+        <button class="btn btn-primary mt-2" onclick="encode()">编码</button>
+    </div>
+    <div class="col-md-6">
+        <textarea id="outputText" class="form-control" rows="6" readonly placeholder="结果"></textarea>
+        <button class="btn btn-secondary mt-2" onclick="decode()">解码</button>
+    </div>
+</div>
+<script>
+function encode() {
+    let text = document.getElementById('inputText').value;
+    let div = document.createElement('div');
+    div.textContent = text;
+    let encoded = div.innerHTML;
+    document.getElementById('outputText').value = encoded;
+}
+function decode() {
+    let encoded = document.getElementById('inputText').value;
+    let div = document.createElement('div');
+    div.innerHTML = encoded;
+    let decoded = div.textContent;
+    document.getElementById('outputText').value = decoded;
+}
+</script>
+{% endblock %}

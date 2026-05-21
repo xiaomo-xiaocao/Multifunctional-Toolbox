@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}HTTP状态码查询{% endblock %}
+{% block content %}
+<h2>HTTP 状态码查询</h2>
+<input type="number" id="codeInput" class="form-control" placeholder="输入状态码，如 200, 404, 500" min="100" max="599">
+<button class="btn btn-primary mt-2" onclick="queryCode()">查询</button>
+<div id="result" class="mt-3"></div>
+<script>
+const statusMap = {
+    100: "Continue", 101: "Switching Protocols", 102: "Processing",
+    200: "OK", 201: "Created", 202: "Accepted", 203: "Non-Authoritative Information", 204: "No Content", 205: "Reset Content", 206: "Partial Content",
+    300: "Multiple Choices", 301: "Moved Permanently", 302: "Found", 303: "See Other", 304: "Not Modified", 307: "Temporary Redirect", 308: "Permanent Redirect",
+    400: "Bad Request", 401: "Unauthorized", 402: "Payment Required", 403: "Forbidden", 404: "Not Found", 405: "Method Not Allowed", 406: "Not Acceptable",
+    407: "Proxy Authentication Required", 408: "Request Timeout", 409: "Conflict", 410: "Gone", 411: "Length Required", 412: "Precondition Failed",
+    413: "Payload Too Large", 414: "URI Too Long", 415: "Unsupported Media Type", 416: "Range Not Satisfiable", 417: "Expectation Failed",
+    418: "I'm a teapot", 421: "Misdirected Request", 422: "Unprocessable Entity", 423: "Locked", 424: "Failed Dependency",
+    425: "Too Early", 426: "Upgrade Required", 428: "Precondition Required", 429: "Too Many Requests", 431: "Request Header Fields Too Large",
+    451: "Unavailable For Legal Reasons",
+    500: "Internal Server Error", 501: "Not Implemented", 502: "Bad Gateway", 503: "Service Unavailable", 504: "Gateway Timeout",
+    505: "HTTP Version Not Supported", 506: "Variant Also Negotiates", 507: "Insufficient Storage", 508: "Loop Detected",
+    510: "Not Extended", 511: "Network Authentication Required"
+};
+function queryCode() {
+    let code = parseInt(document.getElementById('codeInput').value);
+    if (isNaN(code) || code < 100 || code > 599) {
+        document.getElementById('result').innerHTML = '<div class="alert alert-warning">请输入 100-599 之间的数字</div>';
+        return;
+    }
+    let message = statusMap[code] || "未知状态码";
+    let category = Math.floor(code / 100);
+    let categoryName = {1: "信息响应", 2: "成功响应", 3: "重定向", 4: "客户端错误", 5: "服务器错误"}[category] || "";
+    document.getElementById('result').innerHTML = `<div class="alert alert-info"><strong>${code}</strong> ${message}<br><small>${categoryName}</small></div>`;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}JWT解码器{% endblock %}
+{% block content %}
+<h2>JWT解码器</h2>
+<p>粘贴JWT Token，解码Header和Payload（不验证签名）。</p>
+<form hx-post="/tool/jwt-decode" hx-target="#result" hx-swap="innerHTML">
+    <textarea class="form-control" name="token" rows="4" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."></textarea>
+    <button type="submit" class="btn btn-primary mt-2">解码</button>
+</form>
+<div id="result" class="mt-3"></div>
+{% endblock %}

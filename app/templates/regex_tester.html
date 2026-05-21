@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}正则表达式测试器{% endblock %}
+{% block content %}
+<h2>正则表达式测试器</h2>
+<div class="mb-3">
+    <label>正则表达式</label>
+    <input type="text" id="regex" class="form-control" placeholder="\d+">
+</div>
+<div class="mb-3">
+    <label>测试文本</label>
+    <textarea id="testText" class="form-control" rows="6" placeholder="输入测试文本..."></textarea>
+</div>
+<div class="mb-3 form-check">
+    <input type="checkbox" id="global" class="form-check-input"> 全局匹配(g)
+    <input type="checkbox" id="ignoreCase" class="form-check-input"> 忽略大小写(i)
+    <input type="checkbox" id="multiline" class="form-check-input"> 多行模式(m)
+</div>
+<button class="btn btn-primary" onclick="testRegex()">测试</button>
+<div id="result" class="mt-3"></div>
+<script>
+function testRegex() {
+    let pattern = document.getElementById('regex').value;
+    let flags = '';
+    if (document.getElementById('global').checked) flags += 'g';
+    if (document.getElementById('ignoreCase').checked) flags += 'i';
+    if (document.getElementById('multiline').checked) flags += 'm';
+    let text = document.getElementById('testText').value;
+    if (!pattern) { alert('请输入正则表达式'); return; }
+    try {
+        let regex = new RegExp(pattern, flags);
+        let matches = text.match(regex);
+        if (matches) {
+            let html = `<div class="alert alert-success">匹配到 ${matches.length} 个结果：<br>${matches.join('<br>')}</div>`;
+            document.getElementById('result').innerHTML = html;
+        } else {
+            document.getElementById('result').innerHTML = '<div class="alert alert-warning">未匹配到任何内容</div>';
+        }
+    } catch(e) {
+        document.getElementById('result').innerHTML = `<div class="alert alert-danger">正则无效: ${e.message}</div>`;
+    }
+}
+</script>
+{% endblock %}

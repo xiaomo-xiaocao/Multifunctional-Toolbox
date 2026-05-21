@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}字符统计工具{% endblock %}
+{% block content %}
+<h2>字符统计工具</h2>
+<textarea id="inputText" class="form-control" rows="6" placeholder="输入任意文本..."></textarea>
+<div class="row mt-3 text-center">
+    <div class="col-md-3">
+        <div class="border rounded p-2">
+            <h5>字符数</h5>
+            <span id="charCount">0</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="border rounded p-2">
+            <h5>汉字数</h5>
+            <span id="hanCount">0</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="border rounded p-2">
+            <h5>单词数</h5>
+            <span id="wordCount">0</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="border rounded p-2">
+            <h5>行数</h5>
+            <span id="lineCount">0</span>
+        </div>
+    </div>
+</div>
+<script>
+const textarea = document.getElementById('inputText');
+const charSpan = document.getElementById('charCount');
+const hanSpan = document.getElementById('hanCount');
+const wordSpan = document.getElementById('wordCount');
+const lineSpan = document.getElementById('lineCount');
+
+function updateStats() {
+    let text = textarea.value;
+    let chars = text.length;
+    let hans = (text.match(/[\u4e00-\u9fa5]/g) || []).length;
+    let words = text.trim() ? text.trim().split(/\s+/).length : 0;
+    let lines = text ? text.split(/\r\n|\r|\n/).length : 0;
+    charSpan.innerText = chars;
+    hanSpan.innerText = hans;
+    wordSpan.innerText = words;
+    lineSpan.innerText = lines;
+}
+textarea.addEventListener('input', updateStats);
+updateStats();
+</script>
+{% endblock %}

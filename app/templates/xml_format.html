@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}XML格式化{% endblock %}
+{% block content %}
+<h2>XML 格式化</h2>
+<textarea id="xmlInput" class="form-control" rows="6" placeholder="<root><item>test</item></root>"></textarea>
+<button class="btn btn-primary mt-2" onclick="formatXml()">格式化</button>
+<div id="result" class="mt-3"></div>
+<script>
+function formatXml() {
+    let xml = document.getElementById('xmlInput').value;
+    fetch('/api/xml-format', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `xml_text=${encodeURIComponent(xml)}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            document.getElementById('result').innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+        } else {
+            document.getElementById('result').innerHTML = `<pre class="bg-light p-2">${data.formatted}</pre>`;
+        }
+    });
+}
+</script>
+{% endblock %}

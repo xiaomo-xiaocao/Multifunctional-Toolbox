@@ -1,0 +1,35 @@
+TemplateResponse 的首个参数现在要求必须是 request 对象：
+@app.get("/")
+async def index(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html"
+    )
+在老版本中，第一个参数是 name，第二个是 context。
+在新版本中，它的函数签名变成了：TemplateResponse(request, name, context, ...)。
+
+ htmx 框架（hx-post）导致乱码：
+         # 2. 成功时，返回带有 <pre> 标签的 HTML 片段
+        return HTMLResponse(
+            content=f"<pre class='bg-light p-3 border rounded'><code>{formatted}</code></pre>",
+            headers={"Content-Type": "text/html; charset=utf-8"}  # 显式指定 utf-8 彻底解决乱码
+        )
+
+PNG 图片的“二进制源码”被 htmx 当成普通文本强行塞进了网页里：
+@app.post("/tool/qrcode/generate")
+async def generate_qrcode(text: str = Form(...)):
+    # 1. 修复：空文本校验，添加 utf-8 头防止返回的中文警告信息乱码
+    if not text.strip():
+        return HTMLResponse(
+            content="<div class='alert alert-warning'>请输入文本或网址</div>",
+            headers={"Content-Type": "text/html; charset=utf-8"}
+        )
+
+    # 2. 生成二维码并存入内存流
+    img = qrcode.make(text)
+    buf = BytesIO()
+    img.save(buf, format="PNG")
+    buf.seek(0)
+
+    # 3. 正常返回二维码图片流
+    return StreamingResponse(buf, media_type="image/png")

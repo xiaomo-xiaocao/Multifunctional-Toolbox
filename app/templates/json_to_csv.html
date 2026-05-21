@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}JSON转CSV{% endblock %}
+{% block content %}
+<h2>JSON 转 CSV</h2>
+<p>输入JSON数组（对象数组），转换为CSV格式。</p>
+<textarea id="jsonInput" class="form-control" rows="6" placeholder='[{"name":"张三","age":30},{"name":"李四","age":25}]'></textarea>
+<button class="btn btn-primary mt-2" onclick="convert()">转换</button>
+<div id="result" class="mt-3"></div>
+<script>
+function convert() {
+    let json = document.getElementById('jsonInput').value;
+    fetch('/api/json-to-csv', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `json_data=${encodeURIComponent(json)}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            document.getElementById('result').innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+        } else {
+            document.getElementById('result').innerHTML = `<pre class="bg-light p-2">${data.csv}</pre>`;
+        }
+    });
+}
+</script>
+{% endblock %}

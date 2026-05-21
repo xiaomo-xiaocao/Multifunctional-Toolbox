@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}URL 编码/解码工具{% endblock %}
+{% block content %}
+<h2>URL 编码/解码工具</h2>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">🔒 URL 编码</div>
+            <div class="card-body">
+                <form hx-post="/tool/url-encode" hx-target="#encodeResult" hx-swap="innerHTML">
+                    <textarea class="form-control" name="text" rows="4" placeholder="请输入要编码的文本..."></textarea>
+                    <button type="submit" class="btn btn-primary mt-2">编码</button>
+                </form>
+                <div id="encodeResult" class="mt-3"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">🔓 URL 解码</div>
+            <div class="card-body">
+                <form hx-post="/tool/url-decode" hx-target="#decodeResult" hx-swap="innerHTML">
+                    <textarea class="form-control" name="encoded" rows="4" placeholder="请输入要解码的URL..."></textarea>
+                    <button type="submit" class="btn btn-primary mt-2">解码</button>
+                </form>
+                <div id="decodeResult" class="mt-3"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+function addCopyButtonForUrl(containerId) {
+    const container = document.getElementById(containerId);
+    const alertDiv = container.querySelector('.alert-success, .alert-info');
+    if (!alertDiv) return;
+    if (container.querySelector('.copy-btn')) return;
+    const btn = document.createElement('button');
+    btn.textContent = '复制结果';
+    btn.className = 'btn btn-sm btn-secondary mt-2 copy-btn';
+    btn.onclick = () => {
+        let text = alertDiv.innerText;
+        text = text.replace(/^[^：]+：/, '').trim();
+        navigator.clipboard.writeText(text);
+        btn.textContent = '已复制！';
+        setTimeout(() => btn.textContent = '复制结果', 2000);
+    };
+    container.appendChild(btn);
+}
+document.body.addEventListener('htmx:afterSwap', function(evt) {
+    if (evt.target.id === 'encodeResult') addCopyButtonForUrl('encodeResult');
+    if (evt.target.id === 'decodeResult') addCopyButtonForUrl('decodeResult');
+});
+</script>
+{% endblock %}

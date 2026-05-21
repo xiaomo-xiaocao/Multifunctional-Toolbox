@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}URL解析器{% endblock %}
+{% block content %}
+<h2>URL 解析器</h2>
+<input type="url" id="urlInput" class="form-control" placeholder="https://user:pass@example.com:8080/path?query=1#fragment">
+<button class="btn btn-primary mt-2" onclick="parseUrl()">解析</button>
+<div id="result" class="mt-3"></div>
+<script>
+function parseUrl() {
+    let url = document.getElementById('urlInput').value;
+    try {
+        let u = new URL(url);
+        let html = `<ul class="list-group">
+            <li class="list-group-item"><strong>协议</strong> ${u.protocol}</li>
+            <li class="list-group-item"><strong>用户名</strong> ${u.username || '-'}</li>
+            <li class="list-group-item"><strong>密码</strong> ${u.password || '-'}</li>
+            <li class="list-group-item"><strong>主机名</strong> ${u.hostname}</li>
+            <li class="list-group-item"><strong>端口</strong> ${u.port || '-'}</li>
+            <li class="list-group-item"><strong>路径</strong> ${u.pathname}</li>
+            <li class="list-group-item"><strong>查询参数</strong> ${u.search || '-'}</li>
+            <li class="list-group-item"><strong>哈希</strong> ${u.hash || '-'}</li>
+        </ul>`;
+        document.getElementById('result').innerHTML = html;
+    } catch(e) {
+        document.getElementById('result').innerHTML = '<div class="alert alert-danger">无效URL</div>';
+    }
+}
+</script>
+{% endblock %}

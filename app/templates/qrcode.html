@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}二维码生成器{% endblock %}
+{% block content %}
+<h2>二维码生成器</h2>
+<p>输入文本或网址，实时生成二维码图片。</p>
+<form hx-post="/tool/qrcode/generate" hx-target="#qrcode" hx-swap="innerHTML">
+    <div class="mb-3">
+        <input type="text" name="text" class="form-control" placeholder="例如：https://example.com 或 任意文本" required>
+    </div>
+    <button type="submit" class="btn btn-primary">生成二维码</button>
+</form>
+<div id="qrcode" class="mt-3 text-center"></div>
+{% endblock %}

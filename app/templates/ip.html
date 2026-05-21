@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}IP地址查询{% endblock %}
+{% block content %}
+<h2>IP地址查询</h2>
+<p>显示你的公网IP和地理位置。</p>
+<div id="ipinfo" class="alert alert-secondary">
+    正在获取...
+</div>
+<script>
+fetch('/api/my-ip')
+    .then(res => res.json())
+    .then(data => {
+        let html = `<strong>IP地址：</strong> ${data.ip}<br>`;
+        if (data.country) {
+            html += `<strong>国家：</strong> ${data.country}<br>`;
+            html += `<strong>省份：</strong> ${data.region}<br>`;
+            html += `<strong>城市：</strong> ${data.city}<br>`;
+            html += `<strong>运营商：</strong> ${data.isp}`;
+        } else {
+            html += `<span class="text-danger">无法获取位置信息：${data.error || '未知错误'}</span>`;
+        }
+        document.getElementById('ipinfo').innerHTML = html;
+    })
+    .catch(() => {
+        document.getElementById('ipinfo').innerHTML = '<span class="text-danger">获取失败，请刷新重试</span>';
+    });
+</script>
+{% endblock %}

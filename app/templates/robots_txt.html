@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Robots.txt检测{% endblock %}
+{% block content %}
+<h2>Robots.txt 检测工具</h2>
+<div class="mb-3">
+    <input type="url" id="siteUrl" class="form-control" placeholder="输入网站首页地址，例如：https://example.com">
+</div>
+<button class="btn btn-primary" onclick="checkRobots()">检测</button>
+<div id="result" class="mt-3"></div>
+<script>
+function checkRobots() {
+    let url = document.getElementById('siteUrl').value.trim();
+    if (!url) { alert('请输入网址'); return; }
+    document.getElementById('result').innerHTML = '<div class="spinner-border"></div> 检测中...';
+    fetch('/api/robots-txt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `url=${encodeURIComponent(url)}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            document.getElementById('result').innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+        } else {
+            let contentHtml = data.content ? `<pre class="bg-light p-2" style="max-height:300px; overflow:auto;">${escapeHtml(data.content)}</pre>` : '';
+            document.getElementById('result').innerHTML = `
+                <div class="alert alert-info">
+                    <strong>状态：</strong> ${data.status}<br>
+                    <strong>文件URL：</strong> ${data.url}<br>
+                    ${contentHtml}
+                </div>`;
+        }
+    })
+    .catch(() => document.getElementById('result').innerHTML = '<div class="alert alert-danger">请求失败</div>');
+}
+function escapeHtml(str) {
+    return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
+</script>
+{% endblock %}

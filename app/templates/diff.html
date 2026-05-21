@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}文本对比工具{% endblock %}
+{% block content %}
+<h2>文本对比</h2>
+<div class="row">
+    <div class="col-md-6">
+        <label>原文本：</label>
+        <textarea id="text1" class="form-control" rows="6" placeholder="输入第一段文本"></textarea>
+    </div>
+    <div class="col-md-6">
+        <label>新文本：</label>
+        <textarea id="text2" class="form-control" rows="6" placeholder="输入第二段文本"></textarea>
+    </div>
+</div>
+<button class="btn btn-primary mt-3" onclick="compare()">对比</button>
+<div id="diffResult" class="mt-3"></div>
+<script src="https://cdn.jsdelivr.net/npm/diff@5.1.0/dist/diff.min.js"></script>
+<script>
+function compare() {
+    let text1 = document.getElementById('text1').value;
+    let text2 = document.getElementById('text2').value;
+    let diff = Diff.diffLines(text1, text2);
+    let html = '';
+    diff.forEach(part => {
+        let color = part.added ? 'lightgreen' : part.removed ? '#ffcccc' : 'white';
+        let lines = part.value.split('\n').map(l => l || ' ').join('<br>');
+        html += `<div style="background-color:${color}; white-space:pre-wrap; font-family:monospace;">${lines}</div>`;
+    });
+    document.getElementById('diffResult').innerHTML = html || '<div class="alert alert-info">无差异</div>';
+}
+</script>
+{% endblock %}

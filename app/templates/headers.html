@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}HTTP响应头分析{% endblock %}
+{% block content %}
+<h2>HTTP 响应头分析器</h2>
+<div class="mb-3">
+    <input type="url" id="headerUrl" class="form-control" placeholder="输入 URL，例如：https://example.com">
+</div>
+<button class="btn btn-primary" onclick="fetchHeaders()">获取响应头</button>
+<div id="result" class="mt-3"></div>
+<script>
+function fetchHeaders() {
+    let url = document.getElementById('headerUrl').value.trim();
+    if (!url) { alert('请输入网址'); return; }
+    document.getElementById('result').innerHTML = '<div class="spinner-border"></div> 请求中...';
+    fetch('/api/fetch-headers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `url=${encodeURIComponent(url)}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            document.getElementById('result').innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+        } else {
+            let headersHtml = '<ul class="list-group">';
+            for (let [key, value] of Object.entries(data.headers)) {
+                headersHtml += `<li class="list-group-item"><strong>${key}</strong>: ${value}</li>`;
+            }
+            headersHtml += '</ul>';
+            document.getElementById('result').innerHTML = `
+                <div class="alert alert-success">
+                    <strong>状态码：</strong> ${data.status_code}<br>
+                    <strong>最终URL：</strong> ${data.url}
+                </div>
+                <h5>响应头：</h5>
+                ${headersHtml}
+            `;
+        }
+    })
+    .catch(() => document.getElementById('result').innerHTML = '<div class="alert alert-danger">请求失败</div>');
+}
+</script>
+{% endblock %}

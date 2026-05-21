@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}XPath测试器{% endblock %}
+{% block content %}
+<h2>XPath 测试器</h2>
+<p>输入 HTML/XML 内容和 XPath 表达式，测试匹配结果。</p>
+<div class="mb-3">
+    <label>HTML/XML 内容：</label>
+    <textarea id="htmlContent" class="form-control" rows="8" placeholder="粘贴 HTML 或 XML 代码..."></textarea>
+</div>
+<div class="mb-3">
+    <label>XPath 表达式：</label>
+    <input type="text" id="xpathExpr" class="form-control" placeholder="例如：//a/@href 或 //div[@class='content']/text()">
+</div>
+<button class="btn btn-primary" onclick="testXPath()">测试</button>
+<div id="result" class="mt-3"></div>
+<script>
+function testXPath() {
+    let html = document.getElementById('htmlContent').value;
+    let xpath = document.getElementById('xpathExpr').value.trim();
+    if (!html) { alert('请输入 HTML 内容'); return; }
+    if (!xpath) { alert('请输入 XPath 表达式'); return; }
+    document.getElementById('result').innerHTML = '<div class="spinner-border"></div> 测试中...';
+    fetch('/api/xpath-test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `html_content=${encodeURIComponent(html)}&xpath_expr=${encodeURIComponent(xpath)}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            document.getElementById('result').innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+        } else {
+            let resultsHtml = `<div class="alert alert-info">匹配到 ${data.count} 个节点${data.truncated ? '（仅显示前50个）' : ''}</div>`;
+            if (data.results && data.results.length) {
+                resultsHtml += '<ul class="list-group">';
+                data.results.forEach((item, idx) => {
+                    resultsHtml += `<li class="list-group-item"><pre class="mb-0" style="white-space: pre-wrap;">${escapeHtml(item)}</pre></li>`;
+                });
+                resultsHtml += '</ul>';
+            } else {
+                resultsHtml += '<div class="alert alert-warning">无匹配结果</div>';
+            }
+            document.getElementById('result').innerHTML = resultsHtml;
+        }
+    })
+    .catch(() => document.getElementById('result').innerHTML = '<div class="alert alert-danger">请求失败</div>');
+}
+function escapeHtml(str) {
+    return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
+</script>
+{% endblock %}

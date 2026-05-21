@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Cookie解析/生成器{% endblock %}
+{% block content %}
+<h2>Cookie 解析/生成器</h2>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">解析 Cookie 字符串</div>
+            <div class="card-body">
+                <textarea id="cookieStr" class="form-control" rows="4" placeholder="name1=value1; name2=value2; ..."></textarea>
+                <button class="btn btn-primary mt-2" onclick="parseCookie()">解析</button>
+                <div id="parseResult" class="mt-2"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">生成 Cookie 字符串</div>
+            <div class="card-body">
+                <div id="kvPairs"></div>
+                <button class="btn btn-secondary mt-2" onclick="addPair()">添加键值对</button>
+                <button class="btn btn-success mt-2" onclick="generateCookie()">生成</button>
+                <div id="generateResult" class="mt-2"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+function parseCookie() {
+    let str = document.getElementById('cookieStr').value.trim();
+    if (!str) { alert('请输入 Cookie 字符串'); return; }
+    let pairs = str.split(/;\s*/);
+    let html = '<table class="table table-sm"><thead><tr><th>Name</th><th>Value</th></tr></thead><tbody>';
+    for (let pair of pairs) {
+        let idx = pair.indexOf('=');
+        if (idx > 0) {
+            let name = pair.substring(0, idx);
+            let value = pair.substring(idx+1);
+            html += `<tr><td>${escapeHtml(name)}</td><td>${escapeHtml(value)}</td></tr>`;
+        }
+    }
+    html += '</tbody></table>';
+    document.getElementById('parseResult').innerHTML = html;
+}
+let pairIndex = 0;
+function addPair() {
+    let container = document.getElementById('kvPairs');
+    let div = document.createElement('div');
+    div.className = 'row mb-2';
+    div.id = 'pair_' + pairIndex;
+    div.innerHTML = `
+        <div class="col-5"><input type="text" class="form-control" placeholder="Name" id="name_${pairIndex}"></div>
+        <div class="col-5"><input type="text" class="form-control" placeholder="Value" id="value_${pairIndex}"></div>
+        <div class="col-2"><button class="btn btn-danger btn-sm" onclick="removePair(${pairIndex})">删除</button></div>
+    `;
+    container.appendChild(div);
+    pairIndex++;
+}
+function removePair(id) {
+    let div = document.getElementById('pair_' + id);
+    if (div) div.remove();
+}
+function generateCookie() {
+    let pairs = [];
+    for (let i = 0; i < pairIndex; i++) {
+        let nameEl = document.getElementById('name_' + i);
+        let valueEl = document.getElementById('value_' + i);
+        if (nameEl && valueEl && nameEl.value.trim()) {
+            let name = nameEl.value.trim();
+            let value = valueEl.value.trim();
+            pairs.push(`${encodeURIComponent(name)}=${encodeURIComponent(value)}`);
+        }
+    }
+    let cookieStr = pairs.join('; ');
+    document.getElementById('generateResult').innerHTML = `<div class="alert alert-success">${escapeHtml(cookieStr)}</div>`;
+}
+function escapeHtml(str) {
+    return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
+window.onload = function() { addPair(); };
+</script>
+{% endblock %}

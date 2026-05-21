@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Unix时间戳转换{% endblock %}
+{% block content %}
+<h2>Unix时间戳转换</h2>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <div class="card-header">时间戳 → 日期时间</div>
+            <div class="card-body">
+                <input type="number" id="timestampInput" class="form-control" placeholder="输入时间戳（秒）">
+                <button class="btn btn-primary mt-2" onclick="toDateTime()">转换</button>
+                <div id="timestampResult" class="mt-2"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <div class="card-header">日期时间 → 时间戳</div>
+            <div class="card-body">
+                <input type="datetime-local" id="datetimeInput" class="form-control">
+                <button class="btn btn-primary mt-2" onclick="toTimestamp()">转换</button>
+                <div id="datetimeResult" class="mt-2"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+function toDateTime() {
+    let ts = document.getElementById('timestampInput').value;
+    if (!ts) { document.getElementById('timestampResult').innerHTML = '<div class="alert alert-warning">请输入时间戳</div>'; return; }
+    let date = new Date(parseInt(ts) * 1000);
+    if (isNaN(date)) { document.getElementById('timestampResult').innerHTML = '<div class="alert alert-danger">无效时间戳</div>'; return; }
+    document.getElementById('timestampResult').innerHTML = `<div class="alert alert-success">${date.toLocaleString()}</div>`;
+}
+function toTimestamp() {
+    let dt = document.getElementById('datetimeInput').value;
+    if (!dt) { document.getElementById('datetimeResult').innerHTML = '<div class="alert alert-warning">请选择日期时间</div>'; return; }
+    let ts = Math.floor(new Date(dt).getTime() / 1000);
+    document.getElementById('datetimeResult').innerHTML = `<div class="alert alert-success">${ts}</div>`;
+}
+</script>
+{% endblock %}

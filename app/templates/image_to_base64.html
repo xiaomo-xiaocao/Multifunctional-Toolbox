@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}图片转Base64{% endblock %}
+{% block content %}
+<h2>图片转 Base64</h2>
+<input type="file" id="imageInput" accept="image/*" class="form-control">
+<button class="btn btn-primary mt-2" onclick="convert()">转换</button>
+<div id="result" class="mt-3">
+    <textarea id="base64Output" class="form-control" rows="6" readonly placeholder="Base64字符串将显示在这里"></textarea>
+    <button class="btn btn-secondary mt-2" onclick="copyBase64()">复制 Base64</button>
+</div>
+<script>
+function convert() {
+    let file = document.getElementById('imageInput').files[0];
+    if (!file) {
+        alert('请选择图片');
+        return;
+    }
+    let reader = new FileReader();
+    reader.onload = function(e) {
+        document.getElementById('base64Output').value = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+function copyBase64() {
+    let textarea = document.getElementById('base64Output');
+    textarea.select();
+    document.execCommand('copy');
+    alert('已复制到剪贴板');
+}
+</script>
+{% endblock %}

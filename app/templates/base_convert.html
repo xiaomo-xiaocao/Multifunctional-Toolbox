@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}进制转换器{% endblock %}
+{% block content %}
+<h2>进制转换器</h2>
+<div class="row">
+    <div class="col-md-6">
+        <label>输入数字：</label>
+        <input type="text" id="inputNum" class="form-control" placeholder="例如：FF 或 255">
+    </div>
+    <div class="col-md-6">
+        <label>输入进制：</label>
+        <select id="inputBase" class="form-select">
+            <option value="2">二进制</option>
+            <option value="8">八进制</option>
+            <option value="10" selected>十进制</option>
+            <option value="16">十六进制</option>
+        </select>
+    </div>
+</div>
+<div class="row mt-3">
+    <div class="col-md-6">
+        <label>输出进制：</label>
+        <select id="outputBase" class="form-select">
+            <option value="2">二进制</option>
+            <option value="8">八进制</option>
+            <option value="10" selected>十进制</option>
+            <option value="16">十六进制</option>
+        </select>
+    </div>
+    <div class="col-md-6">
+        <button class="btn btn-primary mt-4" onclick="convert()">转换</button>
+    </div>
+</div>
+<div id="result" class="alert alert-success mt-3" style="display:none;"></div>
+<script>
+function convert() {
+    let inputVal = document.getElementById('inputNum').value.trim();
+    let inputBase = parseInt(document.getElementById('inputBase').value);
+    let outputBase = parseInt(document.getElementById('outputBase').value);
+    if (!inputVal) {
+        alert('请输入数字');
+        return;
+    }
+    // 将输入按 inputBase 进制解析为十进制数
+    let decimal;
+    try {
+        decimal = parseInt(inputVal, inputBase);
+        if (isNaN(decimal)) throw new Error();
+    } catch(e) {
+        alert('无效的输入数字');
+        return;
+    }
+    let result = decimal.toString(outputBase);
+    let baseName = {2:'二进制',8:'八进制',10:'十进制',16:'十六进制'};
+    document.getElementById('result').innerHTML = `${baseName[outputBase]}结果：${result}`;
+    document.getElementById('result').style.display = 'block';
+}
+</script>
+{% endblock %}

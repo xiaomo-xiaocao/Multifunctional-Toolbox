@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}网页元信息提取{% endblock %}
+{% block content %}
+<h2>网页元信息提取</h2>
+<div class="mb-3">
+    <input type="url" id="urlInput" class="form-control" placeholder="输入网页地址，例如：https://example.com">
+</div>
+<button class="btn btn-primary" onclick="fetchMeta()">提取</button>
+<div id="result" class="mt-3"></div>
+<script>
+function fetchMeta() {
+    let url = document.getElementById('urlInput').value.trim();
+    if (!url) { alert('请输入网址'); return; }
+    document.getElementById('result').innerHTML = '<div class="spinner-border"></div> 加载中...';
+    fetch('/api/fetch-meta', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `url=${encodeURIComponent(url)}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            document.getElementById('result').innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+        } else {
+            document.getElementById('result').innerHTML = `
+                <div class="alert alert-success">
+                    <strong>标题：</strong> ${data.title || '无'}<br>
+                    <strong>描述：</strong> ${data.description || '无'}<br>
+                    <strong>关键词：</strong> ${data.keywords || '无'}<br>
+                    <strong>最终URL：</strong> ${data.url}
+                </div>`;
+        }
+    })
+    .catch(() => document.getElementById('result').innerHTML = '<div class="alert alert-danger">请求失败</div>');
+}
+</script>
+{% endblock %}

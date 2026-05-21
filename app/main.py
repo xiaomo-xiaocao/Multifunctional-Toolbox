@@ -17,7 +17,6 @@ from app.routers import image, text, code, spider
 from app.routers.spider import page_router, api_router
 from urllib.parse import quote, unquote
 from fastapi.responses import HTMLResponse, StreamingResponse, Response
-from starlette.responses import XMLResponse
 import qrcode
 from io import BytesIO
 
@@ -116,7 +115,7 @@ async def sitemap():
         full_url = f"https://multifunctional-toolbox.up.railway.app{url}"  # 替换为实际域名
         sitemap_xml += f"  <url>\n    <loc>{full_url}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n"
     sitemap_xml += '</urlset>'
-    return XMLResponse(content=sitemap_xml)
+    return Response(content=sitemap_xml)
 
 @app.get("/robots.txt")
 async def robots():

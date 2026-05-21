@@ -7,14 +7,13 @@ import csv
 import json
 import io
 import yaml
-from app.routers import spider
 from xml.dom.minidom import parseString
 from pathlib import Path
 from fastapi import FastAPI, Request, Form
 from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 from app import templates
-from app.routers import image, text, code
+from app.routers import image, text, code, spider
 from urllib.parse import quote, unquote
 from fastapi.responses import HTMLResponse
 # from fastapi.responses import XMLResponse

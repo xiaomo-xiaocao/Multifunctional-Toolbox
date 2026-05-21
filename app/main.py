@@ -16,11 +16,10 @@ from app import templates
 from app.routers import image, text, code, spider
 from app.routers.spider import page_router, api_router
 from urllib.parse import quote, unquote
-from fastapi.responses import HTMLResponse
-from fastapi.responses import Response, XMLResponse
+from fastapi.responses import HTMLResponse, StreamingResponse, Response
+from starlette.responses import XMLResponse
 import qrcode
 from io import BytesIO
-from fastapi.responses import StreamingResponse
 
 load_dotenv()
 

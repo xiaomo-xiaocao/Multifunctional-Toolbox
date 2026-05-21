@@ -14,6 +14,7 @@ from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 from app import templates
 from app.routers import image, text, code, spider
+from app.routers.spider import page_router, api_router
 from urllib.parse import quote, unquote
 from fastapi.responses import HTMLResponse
 # from fastapi.responses import XMLResponse
@@ -33,7 +34,8 @@ if static_dir.exists():
 app.include_router(image.router)
 app.include_router(text.router)
 app.include_router(code.router)
-app.include_router(spider.router)
+app.include_router(page_router)
+app.include_router(api_router)
 
 @app.get("/")
 async def index(request: Request):

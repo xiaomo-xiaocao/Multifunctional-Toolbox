@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>🏆 生活技能工坊 · 每日打卡升级</h2>
+        <a href="/skill/logout" class="btn btn-outline-danger">登出</a>
+    </div>
+    <p class="lead">每天为每个技能打卡，获得经验，提升等级，解锁属性！</p>
+    <div class="row" id="skills-container">
+        {% for skill in skills %}
+        <div class="col-md-4" id="skill-{{ skill.id }}">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h5>{{ skill.icon }} {{ skill.name }}</h5>
+                        <span class="badge bg-primary">Lv.{{ skill.level }}</span>
+                    </div>
+                    <div class="progress mb-2">
+                        <div class="progress-bar" role="progressbar" style="width: {{ skill.progress }}%"></div>
+                    </div>
+                    <p>{{ skill.attr_name }}: {{ skill.attr_value }}</p>
+                    <p>经验: {{ skill.exp }} / {{ skill.exp_needed }}</p>
+                    {% if skill.can_checkin %}
+                    <button hx-post="/skill/checkin/{{ skill.id }}" hx-target="#skill-{{ skill.id }}" hx-swap="outerHTML" class="btn btn-sm btn-success">✨ 打卡 +10</button>
+                    {% else %}
+                    <button class="btn btn-sm btn-secondary" disabled>✅ 今日已打卡</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

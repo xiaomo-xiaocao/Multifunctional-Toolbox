@@ -7,24 +7,46 @@ import csv
 import json
 import io
 import yaml
+import asyncpg
+from contextlib import asynccontextmanager
 from xml.dom.minidom import parseString
 from pathlib import Path
 from fastapi import FastAPI, Request, Form
 from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 from app import templates
-from app.routers import image, text, code, spider
+from app.routers import image, text, code, spider, skill
 from app.routers.spider import page_router, api_router
 from urllib.parse import quote, unquote
 from fastapi.responses import HTMLResponse, StreamingResponse, Response
 from fastapi.responses import FileResponse
+from starlette.middleware.sessions import SessionMiddleware
 import os
 import qrcode
 from io import BytesIO
 
 load_dotenv()
+# 全局数据库连接池
+db_pool = None
 
-app = FastAPI(title="My Toolbox", description="图片处理、文本转换、代码工具")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global db_pool
+    DATABASE_URL = os.getenv("DATABASE_URL")
+    if not DATABASE_URL:
+        raise RuntimeError("DATABASE_URL environment variable not set")
+    db_pool = await asyncpg.create_pool(DATABASE_URL)
+    # 可以在这里调用 init_db 创建表（可选，因为已经手动创建了）
+    yield
+    await db_pool.close()
+
+app = FastAPI(title="My Toolbox", description="图片处理、文本转换、代码工具", lifespan=lifespan)
+
+SECRET_KEY = os.getenv("SECRET_KEY", "_ZU(nBlKsz]De!,WJ=:6c<axY#Jh.RZ[")
+app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
+
+# 以便 routers 模块导入
+__all__ = ["app", "db_pool", "templates"]
 
 static_dir = Path(__file__).resolve().parent / "static"
 if static_dir.exists():
@@ -36,6 +58,7 @@ app.include_router(text.router)
 app.include_router(code.router)
 app.include_router(page_router)
 app.include_router(api_router)
+app.include_router(skill.router)
 
 @app.get("/")
 async def index(request: Request):
@@ -125,11 +148,11 @@ async def sitemap():
         full_url = f"https://multifunctional-toolbox.up.railway.app{url}"  # 替换为实际域名
         sitemap_xml += f"  <url>\n    <loc>{full_url}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n"
     sitemap_xml += '</urlset>'
-    return Response(content=sitemap_xml)
+    return Response(content=sitemap_xml, media_type="application/xml")
 
 @app.get("/robots.txt")
 async def robots():
-    content = "User-agent: *\nSitemap: https://multifunctional-toolbox.up.railway.app.com/sitemap.xml"
+    content = "User-agent: *\nSitemap: https://multifunctional-toolbox.up.railway.app/sitemap.xml"
     return Response(content=content, media_type="text/plain")
 
 @app.get("/tool/qrcode", response_class=HTMLResponse)

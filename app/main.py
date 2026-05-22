@@ -1,4 +1,4 @@
-﻿
+﻿import os
 import jwt
 import hashlib
 import httpx
@@ -8,6 +8,7 @@ import json
 import io
 import yaml
 import asyncpg
+import qrcode
 from contextlib import asynccontextmanager
 from xml.dom.minidom import parseString
 from pathlib import Path
@@ -15,14 +16,9 @@ from fastapi import FastAPI, Request, Form
 from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 from app import templates
-from app.routers import image, text, code, spider, skill
-from app.routers.spider import page_router, api_router
 from urllib.parse import quote, unquote
-from fastapi.responses import HTMLResponse, StreamingResponse, Response
-from fastapi.responses import FileResponse
+from fastapi.responses import HTMLResponse, StreamingResponse, Response, FileResponse
 from starlette.middleware.sessions import SessionMiddleware
-import os
-import qrcode
 from io import BytesIO
 
 load_dotenv()
@@ -36,7 +32,9 @@ async def lifespan(app: FastAPI):
     if not DATABASE_URL:
         raise RuntimeError("DATABASE_URL environment variable not set")
     db_pool = await asyncpg.create_pool(DATABASE_URL)
-    # 可以在这里调用 init_db 创建表（可选，因为已经手动创建了）
+    # 将连接池挂载到 app.state 中，供路由使用
+    app.state.db_pool = db_pool
+
     yield
     await db_pool.close()
 
@@ -52,7 +50,9 @@ static_dir = Path(__file__).resolve().parent / "static"
 if static_dir.exists():
     app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
-# 引入路由模块（url、json-format 等页面应该写在下面这些模块里，而不是本文件中）
+#路由导入移至此处（此时 app 和 lifespan 已经准备就绪，彻底避免循环引用崩溃）
+from app.routers import image, text, code, spider, skill
+from app.routers.spider import page_router, api_router
 app.include_router(image.router)
 app.include_router(text.router)
 app.include_router(code.router)

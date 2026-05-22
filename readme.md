@@ -7,3 +7,5 @@ uvicorn app.main:app --host 0.0.0.0 --port $PORT
 
 生成完整的 requirements.txt：
 pip freeze > requirements.txt
+
+git pull origin main
